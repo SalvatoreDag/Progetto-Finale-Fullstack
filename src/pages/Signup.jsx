@@ -1,6 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useRef } from "react";
+import { registration } from "../utilis/api"
+import { useMutation } from '@tanstack/react-query';
+
 
 function Signup() {
   const nameRef = useRef("");
@@ -8,13 +11,25 @@ function Signup() {
   const passwordRef = useRef("");
   const confirmPasswordRef = useRef("");
 
-  const handeleSubmit = (e) => {
+  const loginMutation = useMutation((credentials) => registration(credentials));
+
+
+  const handleSubmit = (e) => {
 
     e.preventDefault();
     const name = nameRef.current.value;
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const password_confirmation = confirmPasswordRef.current.value;
+
+    loginMutation.mutate({ name, email, password, password_confirmation }, {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (error) => {
+        console.error('Errore durante il login:', error.response.data);
+      },
+    });
 
     //reset values
     nameRef.current.value = "";
@@ -32,7 +47,7 @@ function Signup() {
           </NavLink>
         </div>
         <div className="w-full px-10 py-8 mt-6 overflow-hidden shadow-md sm:max-w-md rounded-xl">
-          <form method="POST">
+          <form onSubmit={handleSubmit} method="POST">
             <div>
               <label
                 htmlFor="name"

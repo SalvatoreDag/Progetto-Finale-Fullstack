@@ -1,19 +1,44 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useRef } from "react";
+import { login } from "../utilis/api";
+import { useMutation } from "@tanstack/react-query";
+import  Cookies  from "universal-cookie";
 
 function Signin() {
   const emailRef = useRef("");
   const passwordRef = useRef("");
+  const cookies = new Cookies();
+
+  const loginMutation = useMutation((credentials) => login(credentials));
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: (data) => {
+          const token = data.data.token;
+          // console.log('Login effettuato con successo. Token:', token);
+          cookies.set("token", token, {
+            path: "/",
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            secure: true,
+          });
+          console.log(token);
+        },
+        onError: (error) => {
+          console.error("Errore durante il login:", error.response.data);
+        },
+      }
+    );
+
     //reset values
-    emailRef.current.value = '';
-    passwordRef.current.value = '';
+    emailRef.current.value = "";
+    passwordRef.current.value = "";
   };
 
   return (
@@ -34,7 +59,7 @@ function Signin() {
           </NavLink>
         </div>
         <div className="w-full px-10 py-8 mt-6 overflow-hidden shadow-md sm:max-w-md rounded-xl">
-          <form method="POST">
+          <form onSubmit={handleSubmit} action="api/login" method="POST">
             <div className="mt-4">
               <label
                 htmlFor="email"
