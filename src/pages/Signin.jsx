@@ -3,43 +3,34 @@ import { NavLink } from "react-router-dom";
 import { useRef } from "react";
 import { login } from "../utilis/api";
 import { useMutation } from "@tanstack/react-query";
-import  Cookies  from "universal-cookie";
+import Cookies from "universal-cookie";
+import { useAuth } from "../context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 function Signin() {
+  const { loginUser } = useAuth();
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const cookies = new Cookies();
-
-  const loginMutation = useMutation((credentials) => login(credentials));
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
-    loginMutation.mutate(
-      { email, password },
-      {
-        onSuccess: (data) => {
-          const token = data.data.token;
-          // console.log('Login effettuato con successo. Token:', token);
-          cookies.set("token", token, {
-            path: "/",
-            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            secure: true,
-          });
-          console.log(token);
-        },
-        onError: (error) => {
-          console.error("Errore durante il login:", error.response.data);
-        },
-      }
-    );
+    const userData = {
+      email,
+      password,
+    };
+
+    loginUser(userData);
 
     //reset values
     emailRef.current.value = "";
     passwordRef.current.value = "";
   };
+
+
 
   return (
     <>
@@ -95,7 +86,7 @@ function Signin() {
               </div>
             </div>
             <div className="flex items-center justify-end mt-4">
-              <button
+              <button 
                 type="submit"
                 className="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-indigo-600 hover:bg-indigo-900 border border-transparent rounded-md active:bg-gray-900 false"
               >

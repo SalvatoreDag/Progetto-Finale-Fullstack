@@ -1,37 +1,34 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useRef } from "react";
-import { registration } from "../utilis/api"
-import { useMutation } from '@tanstack/react-query';
-
+import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "../context/AuthContext";
 
 function Signup() {
+  const { registerUser } = useAuth();
   const nameRef = useRef("");
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const confirmPasswordRef = useRef("");
 
-  const loginMutation = useMutation((credentials) => registration(credentials));
-
+  // const loginMutation = useMutation((credentials) => registration(credentials));
 
   const handleSubmit = (e) => {
-
     e.preventDefault();
     const name = nameRef.current.value;
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const password_confirmation = confirmPasswordRef.current.value;
 
-    loginMutation.mutate({ name, email, password, password_confirmation }, {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-      onError: (error) => {
-        console.error('Errore durante il login:', error.response.data);
-      },
-    });
+    const userData = {
+      name,
+      email,
+      password,
+      password_confirmation,
+    };
 
-    //reset values
+    registerUser(userData);
+
     nameRef.current.value = "";
     emailRef.current.value = "";
     passwordRef.current.value = "";
