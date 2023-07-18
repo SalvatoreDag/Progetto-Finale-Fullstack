@@ -1,6 +1,8 @@
 import React from "react";
 import Lottie from "lottie-react";
 import animation from "../../img/personal-finance.json";
+import { NavLink } from "react-router-dom";
+
 
 function Hero() {
   return (
@@ -13,9 +15,14 @@ function Hero() {
             </h1>
             {/* <p className="text-center italic lg:text-start lg:text-xl">Your financial companion, just a tap away!</p> */}
           </div>
-          <button className="bg-indigo-600 mx-auto hover:bg-indigo-900 transition duration-150 ease-in-out text-white font-bold py-2 px-4 rounded-3xl md:w-40 md:h-14 lg:mx-0">
-            Start Saving
-          </button>
+          {/* <button className="bg-indigo-600 mx-auto hover:bg-indigo-900 transition duration-150 ease-in-out text-white font-bold py-2 px-4 rounded-3xl md:w-40 md:h-14 lg:mx-0"> */}
+          <NavLink
+                to="/dashboard"
+                className="bg-indigo-600 flex items-center justify-center hover:bg-indigo-900 transition duration-150 ease-in-out text-white font-bold py-2 px-4 rounded-3xl md:w-40 md:h-14 lg:mx-0"
+              >
+                <span>Start Saving</span>
+              </NavLink>
+          {/* </button> */}
         </div>
         <div className="lg:w-1/2">
           <Lottie animationData={animation} className="h-80 md:h-96 lg:h-max" />

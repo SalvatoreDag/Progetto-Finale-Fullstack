@@ -7,10 +7,11 @@ import ExpensesData from "../components/expensesData/ExpensesData";
 import StoreExpenses from "../components/storeExpenses/StoreExpenses";
 
 function Dashboard() {
+
   return (
     <div className="flex flex-col items-center">
       <ExpensesData />
-      <StoreExpenses />
+      {/* <StoreExpenses /> */}
     </div>
   );
 }

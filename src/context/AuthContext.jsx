@@ -9,10 +9,9 @@ import {
   expensesByMonth,
   destroyExpenses,
   updateExpenses,
-  storeExpenses
+  storeExpenses,
+  getUser,
 } from "../utilis/api";
-import axios from "axios";
-
 import Cookies from "universal-cookie";
 
 const AuthContext = createContext();
@@ -33,9 +32,38 @@ export const AuthProvider = ({ children }) => {
   const [monthData, setMonthData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [reload, setReload] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  
+
+  const getUserByTokenMutation = useMutation(getUser, {
+    onSuccess: (data) => {
+      setIsLoggedIn(true);
+      setUserName(data.data.name)
+      setUserId(data.data.id)
+      const token = localStorage.getItem('accessToken')
+      setAccessToken(token)
+    },
+    onError: (error) => {
+      console.error(
+        "Errore durante il recuper del token:",
+        error.response.data
+      );
+    },
+  });
+
+  const getUserByToken = async (token) => {
+    try {
+      await getUserByTokenMutation.mutateAsync(token);
+    } catch (error) {
+      console.error("error");
+    }
+  };
 
   const registerMutation = useMutation(registration, {
-    onSuccess: () => {},
+    onSuccess: () => {
+      setSuccess(true);
+    },
     onError: (error) => {
       console.error("Errore durante il login:", error.response.data);
     },
@@ -213,6 +241,7 @@ export const AuthProvider = ({ children }) => {
     monthData,
     isLoading,
     reload,
+    success,
     registerUser,
     loginUser,
     logoutUser,
@@ -221,7 +250,8 @@ export const AuthProvider = ({ children }) => {
     userExpensesByMonth,
     destroyUserExpenses,
     updateUserExpenses,
-    storeUserExpenses
+    storeUserExpenses,
+    getUserByToken
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

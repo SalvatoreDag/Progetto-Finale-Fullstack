@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import DestroyData from "../destroyData/DestroyData";
 import { useAuth } from "../../context/AuthContext";
 import UpdateData from "../updateData/UpdateData";
+import { BiPencil } from "react-icons/bi";
+import { BiTrash } from "react-icons/bi";
 
 function ExpensesDataLayout({
   expensesData,
@@ -13,7 +15,11 @@ function ExpensesDataLayout({
 }) {
   const [searchText, setSearchText] = useState("");
   const { destroyUserExpenses, accessToken, reload } = useAuth();
-  // const [deletedExpenseId, setDeletedExpenseId] = useState(null);
+  const [selectedExpenseId, setSelectedExpenseId] = useState(null);
+  const [selectedTitle, setSelectedTitle] = useState(null);
+  const [selectedAmount, setSelectedAmount] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDescription, setSelectedDescription] = useState(null);
   const [showUpdateData, setShowUpdateData] = useState(false);
 
   const handleSearchChange = (event) => {
@@ -41,8 +47,13 @@ function ExpensesDataLayout({
   //   setDeletedExpenseId(id);
   // };
 
-  const handleUpdateForm = () => {
+  const handleUpdateForm = (id, title, amount, date, description) => {
     setShowUpdateData(true);
+    setSelectedExpenseId(id);
+    setSelectedTitle(title);
+    setSelectedAmount(amount);
+    setSelectedDate(date);
+    setSelectedDescription(description);
   };
 
   const expensesList =
@@ -116,36 +127,41 @@ function ExpensesDataLayout({
                     <p className="font-bold text-right">{expense.amount} €</p>
                     <p>{expense.date}</p>
                   </div>
-                  <div className="flex flex-col-reverse">
+                  <div className="flex flex-col-reverse justify-center">
                     <button
                       className="font-bold"
-                      onClick={(event) => onDelete(event, expense.id)}
+                      onClick={() => onDelete(expense.id)}
                     >
-                      cestino
+                      <BiTrash />
                     </button>
-                    {/* <button
-                      className="font-bold"
-                      // onClick={(event) => onDelete(event, expense.id)}
+                    <button
+                      className="h-5"
+                      onClick={() =>
+                        handleUpdateForm(
+                          expense.id,
+                          expense.title,
+                          expense.amount,
+                          expense.date,
+                          expense.description
+                        )
+                      }
                     >
-                      matita
-                    </button> */}
-                    <button onClick={handleUpdateForm}>
-                      matita
+                      <BiPencil />
                     </button>
 
-                    {showUpdateData &&  (
+                    {showUpdateData && (
                       <div className="fixed inset-0 flex items-center justify-center">
-                      <div className="bg-black bg-opacity-50 fixed inset-0"></div> 
-                      <div className="bg-white p-8 rounded-md shadow-md relative">
-                        <UpdateData
-                          oldData={{
-                            id: expense.id,
-                            currentTitle: expense.title,
-                            currentAmount: expense.amount,
-                            currentDate: expense.date,
-                            currentDescription: expense.description,
-                          }}
-                        />
+                        <div className="bg-black bg-opacity-50 fixed inset-0"></div>
+                        <div className="bg-white p-8 rounded-md shadow-md relative">
+                          <UpdateData
+                            currentData={{
+                              id: selectedExpenseId,
+                              currentTitle: selectedTitle,
+                              currentAmount: selectedAmount,
+                              currentDate: selectedDate,
+                              currentDescription: selectedDescription,
+                            }}
+                          />
                         </div>
                       </div>
                     )}

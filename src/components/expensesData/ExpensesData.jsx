@@ -4,11 +4,18 @@ import { useState, useEffect } from "react";
 import ExpensesDataLayout from "../expensesDataLayout/ExpensesDataLayout";
 import ChartLayout from "../chartLayout/ChartLayout";
 import Loading from "../loading/Loading";
-import axios from "axios";
-
+import StoreExpenses from "../storeExpenses/StoreExpenses";
 
 function ExpensesData() {
-  const { accessToken, userExpensesByMonth, monthData, isLoading, destroyUserExpenses, reload } = useAuth();
+  const {
+    accessToken,
+    userExpensesByMonth,
+    monthData,
+    isLoading,
+    destroyUserExpenses,
+    reload,
+    isLoggedIn,
+  } = useAuth();
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
@@ -16,10 +23,6 @@ function ExpensesData() {
   // const [deletedExpenseId, setDeletedExpenseId] = useState(null);
   // const [isDeleted, setIsDeleted] = useState(false);
   // const [expenses, setExpenses] = useState([]);
-
-
-  
-
 
   // Array con i nomi dei mesi (in base all'indice del mese)
   const monthNames = [
@@ -53,8 +56,7 @@ function ExpensesData() {
     }
   };
 
-  const deleteExpenses = (event, id) => {
-
+  const deleteExpenses = (id) => {
     const data = {
       id,
       accessToken,
@@ -73,10 +75,9 @@ function ExpensesData() {
     userExpensesByMonth(data);
     handleSearch("");
     //  setIsDeleted(false);
-  }, [selectedMonth, reload]);
+  }, [selectedMonth, reload, isLoggedIn]);
 
   const expensesData = monthData && monthData.data ? monthData.data : [];
-
 
   return (
     <div className="lg:w-2/5">
@@ -93,22 +94,32 @@ function ExpensesData() {
           ))}
         </select>
       </div>
-      <div>
-        {isLoading ? ( // Mostra l'indicatore di caricamento se loading è true
-          <Loading />
-        ) : (
-          <div>
-            <ExpensesDataLayout
-              expensesData={expensesData}
-              selectedMonth={monthNames[selectedMonth]}
-              searchResults={searchResults}
-              onSearch={handleSearch}
-              onDelete={deleteExpenses}
-            />
-            <ChartLayout expensesData={expensesData} />
-          </div>
-        )}
-      </div>
+      {monthData.data ? (
+        <div>
+          {isLoading ? ( // Mostra l'indicatore di caricamento se loading è true
+            <Loading />
+          ) : (
+            <div>
+              <ExpensesDataLayout
+                expensesData={expensesData}
+                selectedMonth={monthNames[selectedMonth]}
+                searchResults={searchResults}
+                onSearch={handleSearch}
+                onDelete={deleteExpenses}
+              />
+              <ChartLayout expensesData={expensesData} />
+              <StoreExpenses />
+            </div>
+          )}
+        </div>
+      ) : isLoading ? (
+        <Loading />
+      ) : (
+        <div>
+          <h3 className="text-center my-5 lg:text-lg font-semibold underline">No expenses found, enter some</h3>
+          <StoreExpenses />
+        </div>
+      )}
     </div>
   );
 }

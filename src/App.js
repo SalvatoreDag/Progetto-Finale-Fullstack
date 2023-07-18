@@ -6,16 +6,34 @@ import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import Dashboard from "./pages/Dashboard";
-import SearchExpenses from "./components/search/SearchExpenses";
 import { useAuth } from "./context/AuthContext";
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import Loading from "./components/loading/Loading";
 
 function App() {
-  const { isLoggedIn } = useAuth();
-
+  const { isLoggedIn, getUserByToken } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
   
+
+  const token = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (token) {
+      const data = {
+        token,
+      };
+      getUserByToken(data).then(() => {
+        setIsLoading(false);
+      });
+    } else {
+      setIsLoading(false);
+    }
+  }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   const pages = createBrowserRouter([
     {
@@ -36,7 +54,7 @@ function App() {
         },
         {
           path: "/auth/signin",
-          element: <Signin />,
+          element: !isLoggedIn ? <Signin /> : <Navigate to="/dashboard" />,
         },
       ],
     },

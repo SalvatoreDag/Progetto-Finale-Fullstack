@@ -1,26 +1,20 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
-function UpdateData({ oldData }) {
-  const { id, currentTitle, currentAmount, currentDate, currentDescription } = oldData;
+function UpdateData({ currentData }) {
+  const { id, currentTitle, currentAmount, currentDate, currentDescription } =
+    currentData;
 
   const { accessToken, updateUserExpenses } = useAuth();
-  const titleRef = useRef("");
-  const amountRef = useRef("");
-  const dateRef = useRef("");
-  const descriptionRef = useRef("");
+
+  const [title, setTitle] = useState(currentTitle);
+  const [amount, setAmount] = useState(currentAmount);
+  const [date, setDate] = useState(currentDate);
+  const [description, setDescription] = useState(currentDescription);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const title = titleRef.current.value;
-    const amount = amountRef.current.value;
-    const date = dateRef.current.value;
-    const description = descriptionRef.current.value;
-    console.log(date);
-    console.log(amount);
-    console.log(title);
-    
     const data = {
       id,
       accessToken,
@@ -34,52 +28,77 @@ function UpdateData({ oldData }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="title">Title:</label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          ref={titleRef}
-          required
-          defaultValue={currentTitle}
-        />
-      </div>
-      <div>
-        <label htmlFor="amount">Amount:</label>
-        <input
-          type="number"
-          id="amount"
-          name="amount"
-          ref={amountRef}
-          required
-          defaultValue={currentAmount}
-        />
-      </div>
-      <div>
-        <label htmlFor="date">Date:</label>
-        <input
-          type="date"
-          id="date"
-          name="date"
-          ref={dateRef}
-          required
-          defaultValue={currentDate}
-        />
-      </div>
-      <div>
-        <label htmlFor="description">Description:</label>
-        <textarea
-          id="description"
-          name="description"
-          ref={descriptionRef}
-          required
-          defaultValue={currentDescription}
-        ></textarea>
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+    <div className="flex justify-center items-center">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm">
+        <div className="mb-4">
+          <label htmlFor="title" className="block text-gray-700 font-bold mb-2">
+            Title:
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="amount"
+            className="block text-gray-700 font-bold mb-2"
+          >
+            Amount:
+          </label>
+          <input
+            type="number"
+            id="amount"
+            name="amount"
+            required
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="date" className="block text-gray-700 font-bold mb-2">
+            Date:
+          </label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            required
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="description"
+            className="block text-gray-700 font-bold mb-2"
+          >
+            Description:
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            required
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-indigo-700"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
   );
 }
 

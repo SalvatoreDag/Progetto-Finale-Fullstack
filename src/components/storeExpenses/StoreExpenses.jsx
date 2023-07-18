@@ -33,36 +33,66 @@ function StoreExpenses() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="title">Title:</label>
-        <input type="text" id="title" name="title" ref={titleRef} required />
-      </div>
-      <div>
-        <label htmlFor="amount">Amount:</label>
-        <input
-          type="number"
-          id="amount"
-          name="amount"
-          ref={amountRef}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="date">Date:</label>
-        <input type="date" id="date" name="date" ref={dateRef} required />
-      </div>
-      <div>
-        <label htmlFor="description">Description:</label>
-        <textarea
-          id="description"
-          name="description"
-          ref={descriptionRef}
-          required
-        ></textarea>
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+    <form onSubmit={handleSubmit} className="w-full max-w-sm mx-auto">
+  <div className="mb-4">
+    <label htmlFor="title" className="block text-gray-700 font-bold mb-2">
+      Title:
+    </label>
+    <input
+      type="text"
+      id="title"
+      name="title"
+      ref={titleRef}
+      required
+      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+    />
+  </div>
+  <div className="mb-4">
+    <label htmlFor="amount" className="block text-gray-700 font-bold mb-2">
+      Amount:
+    </label>
+    <input
+      type="number"
+      id="amount"
+      name="amount"
+      ref={amountRef}
+      required
+      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+    />
+  </div>
+  <div className="mb-4">
+    <label htmlFor="date" className="block text-gray-700 font-bold mb-2">
+      Date:
+    </label>
+    <input
+      type="date"
+      id="date"
+      name="date"
+      ref={dateRef}
+      required
+      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
+    />
+  </div>
+  <div className="mb-4">
+    <label htmlFor="description" className="block text-gray-700 font-bold mb-2">
+      Description:
+    </label>
+    <textarea
+      id="description"
+      name="description"
+      ref={descriptionRef}
+      required
+      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500"
+    ></textarea>
+  </div>
+  <button
+    type="submit"
+    className="w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-indigo-700"
+  >
+    Submit
+  </button>
+</form>
+
   );
 }
 

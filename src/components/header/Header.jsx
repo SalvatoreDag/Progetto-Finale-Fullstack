@@ -204,7 +204,7 @@ function Header() {
                       clipRule="evenodd"
                     ></path>
                   </svg>
-                  <span className=" ml-3 whitespace-nowrap">Logut</span>
+                  <span className=" ml-3 whitespace-nowrap">Logout</span>
                 </button>
               </li>
             )}
