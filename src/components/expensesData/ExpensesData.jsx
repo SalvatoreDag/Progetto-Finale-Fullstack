@@ -1,30 +1,27 @@
 import React from "react";
-import { useAuth } from "../../context/AuthContext";
 import { useState, useEffect } from "react";
-import ExpensesDataLayout from "../expensesDataLayout/ExpensesDataLayout";
+import ExpensesLayout from "../expensesLayout/ExpensesLayout";
 import ChartLayout from "../chartLayout/ChartLayout";
 import Loading from "../loading/Loading";
 import StoreExpenses from "../storeExpenses/StoreExpenses";
+import { expensesByMonth } from "../../utilis/api";
+import { ClientQuery } from "../../query/ClientQuery";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import MonthSelect from "../monthSelect/MonthSelect";
 
+//component that manages expense data
 function ExpensesData() {
-  const {
-    accessToken,
-    userExpensesByMonth,
-    monthData,
-    isLoading,
-    destroyUserExpenses,
-    reload,
-    isLoggedIn,
-  } = useAuth();
+  const accessToken =
+    sessionStorage.getItem("accessToken") || localStorage.getItem("token");
+  const { destroyUserExpenses } = ClientQuery();
+  const queryClient = useQueryClient();
+  const [isOpen, setIsOpen] = useState(false);
+
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [searchResults, setSearchResults] = useState([]);
-  // const [deletedExpenseId, setDeletedExpenseId] = useState(null);
-  // const [isDeleted, setIsDeleted] = useState(false);
-  // const [expenses, setExpenses] = useState([]);
 
-  // Array con i nomi dei mesi (in base all'indice del mese)
   const monthNames = [
     "January",
     "February",
@@ -40,83 +37,106 @@ function ExpensesData() {
     "December",
   ];
 
-  const handleMonthChange = (event) => {
-    setSelectedMonth(parseInt(event.target.value, 10));
+  const selectedMonthName = monthNames[selectedMonth];
+
+  const updateSearchResults = (updatedResults) => {
+    setSearchResults(updatedResults);
+  };
+
+  //call to recover expenses
+  const { data, isLoading, isError, error } = useQuery(
+    ["expensesByMonth", selectedMonthName],
+    () => expensesByMonth({ accessToken, selectedMonthName }),
+    {
+      onError: (error) => {
+        queryClient.setQueryData(["message"], error.response.data.message);
+      },
+    }
+  );
+
+  //change month function 
+  const handleMonthChange = (selectedValue) => {
+    setSelectedMonth(parseInt(selectedValue, 10));
     setSearchResults([]);
   };
 
+  //search function
   const handleSearch = (searchText) => {
     if (searchText.trim() === "") {
-      setSearchResults([]); // Se il campo di ricerca è vuoto, mostra tutte le spese
+      setSearchResults([]); // If the search field is empty, show all expenses
     } else {
-      const results = monthData.data.expenses.filter((expense) =>
+      const results = data.data.expenses.filter((expense) =>
         expense.title.toLowerCase().includes(searchText.toLowerCase())
       );
       setSearchResults(results);
     }
   };
 
+  //delete expenses function
   const deleteExpenses = (id) => {
     const data = {
       id,
       accessToken,
     };
-    console.log(data);
-    destroyUserExpenses(data);
-    //  setDeletedExpenseId(id);>
-    //  setIsDeleted(true);
+    destroyUserExpenses(data).then(
+      setSearchResults((prevSearchResults) => {
+        return prevSearchResults.filter((expense) => expense.id !== id);
+      })
+    );
   };
 
-  useEffect(() => {
-    const data = {
-      accessToken,
-      selectedMonthName: monthNames[selectedMonth],
-    };
-    userExpensesByMonth(data);
-    handleSearch("");
-    //  setIsDeleted(false);
-  }, [selectedMonth, reload, isLoggedIn]);
-
-  const expensesData = monthData && monthData.data ? monthData.data : [];
+  const expensesData =
+    data && data.data && data.data.expenses ? data.data.expenses : [];
 
   return (
-    <div className="lg:w-2/5">
-      <div className="p-4 text-center">
-        <select
-          className="bg-white p-2  rounded-3xl"
-          value={selectedMonth}
-          onChange={handleMonthChange}
-        >
-          {monthNames.map((monthName, index) => (
-            <option className="uppercase" key={index} value={index}>
-              {monthName}
-            </option>
-          ))}
-        </select>
-      </div>
-      {monthData.data ? (
+    <div className="w-max">
+      <MonthSelect
+        monthNames={monthNames}
+        selectedMonth={selectedMonth}
+        handleMonthChange={handleMonthChange}
+      />
+      {expensesData.length > 0 ? (
         <div>
-          {isLoading ? ( // Mostra l'indicatore di caricamento se loading è true
+          {isLoading ? (
             <Loading />
           ) : (
-            <div>
-              <ExpensesDataLayout
+            <div className="lg:flex">
+            <div className="lg:w-1/3">
+              <ExpensesLayout
                 expensesData={expensesData}
-                selectedMonth={monthNames[selectedMonth]}
                 searchResults={searchResults}
                 onSearch={handleSearch}
                 onDelete={deleteExpenses}
+                updateSearchResults={updateSearchResults}
               />
-              <ChartLayout expensesData={expensesData} />
-              <StoreExpenses />
             </div>
+            <div className="lg:w-2/3">
+              <ChartLayout expensesData={expensesData} />
+          
+              {isOpen ? (
+                <StoreExpenses expensesData={expensesData} setIsOpen={setIsOpen} />
+              ) : (
+                <button
+                  className="w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-indigo-700"
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                >
+                  Add new Expense +
+                </button>
+              )}
+            </div>
+          </div>
+          
           )}
         </div>
       ) : isLoading ? (
         <Loading />
       ) : (
         <div>
-          <h3 className="text-center my-5 lg:text-lg font-semibold underline">No expenses found, enter some</h3>
+          <h3 className="text-center my-5 lg:text-lg font-semibold underline">
+            No expenses found, enter some
+          </h3>
           <StoreExpenses />
         </div>
       )}

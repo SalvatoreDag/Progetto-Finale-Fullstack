@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./pages/RootLayout";
@@ -6,32 +5,50 @@ import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import Dashboard from "./pages/Dashboard";
-import { useAuth } from "./context/AuthContext";
 import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Loading from "./components/loading/Loading";
+import { getUser } from "./utilis/api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Popup from "../src/components/popup/Popup";
 
 function App() {
-  const { isLoggedIn, getUserByToken } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
-  
+  const queryClient = useQueryClient();
+  const token =
+    sessionStorage.getItem("accessToken") || localStorage.getItem("token");
 
-  const token = localStorage.getItem("accessToken");
-
-  useEffect(() => {
-    if (token) {
-      const data = {
-        token,
-      };
-      getUserByToken(data).then(() => {
-        setIsLoading(false);
-      });
-    } else {
-      setIsLoading(false);
+  //called to retrieve the data after a reload or after closing the window
+  const { isLoading, isPaused } = useQuery(
+    ["userData"],
+    () => getUser({ token }),
+    {
+      enabled: !!token,
+      staleTime: 5000,
+      onSuccess: (userData) => {
+        const username = userData.data.name;
+        queryClient.setQueryData(["isLoggedIn"], true);
+        queryClient.setQueryData(["userName"], username);
+      },
+      onError: (error) => {
+        queryClient.setQueryData(["message"], error.response.data.message);
+      },
     }
-  }, []);
+  );
+  const { data: isLoggedIn } = useQuery(["isLoggedIn"], null);
 
-  if (isLoading) {
+  const { data: message } = useQuery(["message"], null);
+
+  if (isPaused) {
+    return (
+      <div className="w-max mx-auto p-10 rounded-2xl border">
+      <h3 className="text-center my-5 lg:text-lg font-semibold">
+        Lost connection. The request will resume as soon as the connection is
+        re-established
+      </h3>
+      </div>
+    );
+  }
+
+  if (isLoading && token) {
     return <Loading />;
   }
 
@@ -63,6 +80,7 @@ function App() {
   return (
     <>
       <RouterProvider router={pages} />
+      <Popup message={message} />
     </>
   );
 }

@@ -1,15 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useRef, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "../context/AuthContext";
-import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineEye } from "react-icons/ai";
-import { AiOutlineEyeInvisible } from "react-icons/ai";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { ClientQuery } from "../query/ClientQuery";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+//registration management component
 function Signup() {
-  const { registerUser, success } = useAuth();
+  const { registerUser } = ClientQuery();
+  const queryClient = useQueryClient();
+
   const nameRef = useRef("");
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -17,6 +18,13 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const { data: isSuccess } = useQuery(["isSuccess"], null);
+
+  if (isSuccess) {
+    console.log(isSuccess);
+    navigate("/auth/signin");
+    queryClient.removeQueries(["isSuccess"]);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,11 +40,8 @@ function Signup() {
       password_confirmation,
     };
 
-    registerUser(userData).then(() => {
-      if (success) {
-        navigate("/auth/signin");
-      }
-    });
+    //register function
+    registerUser(userData);
 
     nameRef.current.value = "";
     emailRef.current.value = "";
@@ -102,7 +107,7 @@ function Signup() {
               >
                 Password:
               </label>
-              <div className="flex gap-3 items-center">
+              <div className="flex gap-3 items-center relative">
                 <input
                   required
                   type={showPassword ? "text" : "password"}
@@ -111,7 +116,7 @@ function Signup() {
                   ref={passwordRef}
                 />
                 <button
-                  className="flex items-center justify-center h-8 w-8 text-gray-600 rounded-full border border-gray-300 focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 h-8 w-8 text-gray-600"
                   onClick={handleTogglePassword}
                 >
                   {showPassword ? (
@@ -129,7 +134,7 @@ function Signup() {
               >
                 Confirm Password:
               </label>
-              <div className="flex items-center gap-3">
+              <div className="flex gap-3 items-center relative">
                 <input
                   required
                   type={showConfirmPassword ? "text" : "password"}
@@ -138,7 +143,7 @@ function Signup() {
                   ref={confirmPasswordRef}
                 />
                 <button
-                  className="flex items-center justify-center h-8 w-8 text-gray-600 rounded-full border border-gray-300 focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 h-8 w-8 text-gray-600"
                   onClick={handleToggleConfirmPassword}
                 >
                   {showConfirmPassword ? (

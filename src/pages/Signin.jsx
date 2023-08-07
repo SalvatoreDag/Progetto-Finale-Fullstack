@@ -1,22 +1,31 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useRef, useState } from "react";
-import { login } from "../utilis/api";
-import { useMutation } from "@tanstack/react-query";
-import Cookies from "universal-cookie";
-import { useAuth } from "../context/AuthContext";
-import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineEye } from "react-icons/ai"
-import { AiOutlineEyeInvisible } from "react-icons/ai"
+import { AiOutlineEye } from "react-icons/ai";
+import { AiOutlineEyeInvisible } from "react-icons/ai";
+import { ClientQuery } from "../query/ClientQuery";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+//login management component
 function Signin() {
-  const { loginUser, isLoggedIn } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const emailRef = useRef("");
   const passwordRef = useRef("");
-  const cookies = new Cookies();
+  const { loginUser } = ClientQuery();
+  const queryClient = useQueryClient();
+  const { data: isSuccess } = useQuery(["isSuccess"], null);
+  const [remember, setRemember] = useState(false);
+
+  if (isSuccess) {
+    navigate("/dashboard");
+    queryClient.removeQueries(["isSuccess"], null);
+  }
+
+  const rememberToggle = () => {
+    setRemember(true);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,11 +35,11 @@ function Signin() {
     const userData = {
       email,
       password,
+      remember,
     };
 
-    loginUser(userData).then(() => {
-      navigate("/dashboard");
-    });
+    //login function
+    loginUser(userData);
 
     //reset values
     emailRef.current.value = "";
@@ -40,7 +49,7 @@ function Signin() {
   const handleToggle = (e) => {
     e.preventDefault();
     setShowPassword((prevState) => !prevState);
-    };
+  };
 
   return (
     <>
@@ -60,56 +69,70 @@ function Signin() {
           </NavLink>
         </div>
         <div className="w-full px-10 py-8 mt-6 overflow-hidden shadow-md sm:max-w-md rounded-xl">
-        {/* <div className="w-full max-w-sm mx-auto bg-white rounded-xl shadow-md p-6"> */}
-  <form onSubmit={handleSubmit} action="api/login" method="POST">
-    <div className="mt-4">
-      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-        Email:
-      </label>
-      <input
-        required
-        type="email"
-        name="email"
-        className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        ref={emailRef}
-      />
-    </div>
-    <div className="mt-4">
-      <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-        Password:
-      </label>
-      <div className="flex gap-3 items-center">
-        <input
-          required
-          type={showPassword ? "text" : "password"}
-          name="password"
-          className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          ref={passwordRef}
-        />
-        <button
-          className="flex items-center justify-center h-8 w-8 text-gray-600 rounded-full border border-gray-300 focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          onClick={handleToggle}
-        >
-          {showPassword ? (
-            <AiOutlineEyeInvisible className="w-5 h-5" />
-          ) : (
-            <AiOutlineEye className="w-5 h-5" />
-          )}
-        </button>
-      </div>
-    </div>
-    <div className="flex items-center justify-end mt-4">
-      <button
-        type="submit"
-        className="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase bg-indigo-500 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
-      >
-        Login
-      </button>
-    </div>
-  </form>
-</div>
-
+          {/* <div className="w-full max-w-sm mx-auto bg-white rounded-xl shadow-md p-6"> */}
+          <form onSubmit={handleSubmit} action="api/login" method="POST">
+            <div className="mt-4">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email:
+              </label>
+              <input
+                required
+                type="email"
+                name="email"
+                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                ref={emailRef}
+              />
+            </div>
+            <div className="mt-4">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password:
+              </label>
+              <div className="flex gap-3 items-center relative">
+                <input
+                  required
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  ref={passwordRef}
+                />
+                <button
+                  className="absolute right-0 top-1/2 -translate-y-1/2 h-8 w-8 text-gray-600 "
+                  onClick={handleToggle}
+                >
+                  {showPassword ? (
+                    <AiOutlineEyeInvisible className="w-5 h-5" />
+                  ) : (
+                    <AiOutlineEye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+            </div>
+            <div className="flex items-center justify-between mt-4">
+              <div className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  id="rememberMeCheckbox"
+                  // checked={rememberMe}
+                  onChange={rememberToggle}
+                />
+                <label htmlFor="rememberMeCheckbox">Remember me</label>
+              </div>
+              <button
+                type="submit"
+                className="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase bg-indigo-500 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
+              >
+                Login
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
       {/* </div> */}
     </>
   );
