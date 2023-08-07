@@ -1,17 +1,13 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
-import Chart from "chart.js/auto"; // Aggiungi questa importazione
+import Chart from "chart.js/auto"; 
 
+//component showing graph
 function ChartLayout({ expensesData }) {
-  const expenseTitles = expensesData.expenses
-    ? expensesData.expenses.map((expense) => expense.title)
-    : [];
-  const expenseAmounts = expensesData.expenses
-    ? expensesData.expenses.map((expense) => expense.amount)
-    : [];
-  const expenseDate = expensesData.expenses
-    ? expensesData.expenses.map((expense) => expense.date)
-    : [];
+  
+  const expenseDate = expensesData.map((expense) => expense.date);
+  const expenseAmounts = expensesData.map((expense) => expense.amount);
+  const expenseTitles = expensesData.map((expense) => expense.title)
 
   const chartData = {
     labels: expenseDate,
@@ -26,7 +22,6 @@ function ChartLayout({ expensesData }) {
     ],
   };
 
-  // Definire le opzioni del grafico
   const chartOptions = {
     responsive: true,
     scales: {
@@ -38,10 +33,8 @@ function ChartLayout({ expensesData }) {
       tooltip: {
         callbacks: {
           title: function (tooltipItems) {
-            // Ottieni l'indice del tooltip attuale
             const index = tooltipItems[0]?.dataIndex || 0;
 
-            // Restituisci il titolo della spesa corrispondente all'indice
             return expenseTitles[index] || "";
           },
         },
@@ -50,7 +43,7 @@ function ChartLayout({ expensesData }) {
   };
 
   return (
-    <div className="chart-container bg-indigo-50 p-10 rounded-xl ">
+    <div className=" bg-indigo-50 w-full p-5 rounded-xl ">
       <Line data={chartData} options={chartOptions} />
     </div>
   );
