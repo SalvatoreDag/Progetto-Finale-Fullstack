@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import ExpensesData from "../components/expensesData/ExpensesData";
 
 function Dashboard() {
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="lg:mt-10 items-center h-screen flex justify-content">
       <ExpensesData />
       {/* <StoreExpenses /> */}
     </div>

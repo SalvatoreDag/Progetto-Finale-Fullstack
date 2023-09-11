@@ -7,7 +7,7 @@ import happy from "../../img/happy.png";
 
 function WhySection() {
   return (
-    <section className=" my-20 py-10 lg:ml-64">
+    <section className=" my-20 py-10 ">
       <h2 className="text-center font-extrabold md:text-2xl lg:text-3xl lg:mb-20">
         Why Use Money Ninja
       </h2>

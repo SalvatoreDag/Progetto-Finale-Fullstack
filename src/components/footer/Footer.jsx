@@ -3,7 +3,7 @@ import React from 'react'
 function Footer() {
   return (
     
-<footer className="p-4  bg-indigo-200 shadow md:flex md:items-center md:justify-between md:p-6 lg:ml-64">
+<footer className="p-4  bg-indigo-200 shadow md:flex md:items-center md:justify-between md:p-6 ">
     <p className="text-sm sm:text-center">© 2022 Salvatore D'Agostino. All Rights Reserved.
     </p>
     <ul className="flex flex-wrap items-center mt-3 text-sm sm:mt-0">

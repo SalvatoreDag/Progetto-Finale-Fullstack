@@ -6,14 +6,13 @@ import { NavLink } from "react-router-dom";
 
 function Hero() {
   return (
-    <section className="bg-indigo-200 -mt-12 lg:-mt-20">
-      <div className="h-[70vh]  p-10 flex flex-col justify-center md:h-[80vh] lg:h-[70vh] lg:flex-row lg:jusitfy-end lg:ml-72 ">
+    <section className="bg-indigo-200 -mt-12 lg:-mt-20 ">
+      <div className="h-[70vh]  p-10 flex flex-col justify-center md:h-[80vh]  lg:flex-row lg:jusitfy-end ">
         <div className="flex flex-col justify-center gap-10 md:gap-10 lg:w-1/2 lg:p-10">
           <div>
             <h1 className="mt-12 text-center uppercase text-2xl font-extrabold text-gray-800 md:text-3xl lg:text-5xl lg:text-start">
               Your financial companion, just a tap away!
             </h1>
-            {/* <p className="text-center italic lg:text-start lg:text-xl">Your financial companion, just a tap away!</p> */}
           </div>
           <NavLink
                 to="/dashboard"

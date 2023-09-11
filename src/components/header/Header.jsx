@@ -46,7 +46,7 @@ function Header() {
         data-drawer-toggle="default-sidebar"
         aria-controls="default-sidebar"
         type="button"
-        className="inline-flex items-center p-2 mt-2 ml-3 text-sm"
+        className="inline-flex text-black items-center p-2 mt-2 ml-3 text-sm"
         onClick={toggleSidebar}
       >
         <span className="sr-only">Open sidebar</span>
@@ -85,7 +85,7 @@ function Header() {
                   onClick={closeSidebar}
                 >
                   <span className="flex-1 ml-3 whitespace-nowrap">
-                    Welcome Back, {userName}
+                    {userName}
                   </span>
                 </a>
               </li>

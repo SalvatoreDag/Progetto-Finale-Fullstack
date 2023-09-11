@@ -23,6 +23,7 @@ function ChartLayout({ expensesData }) {
   };
 
   const chartOptions = {
+   maintainAspectRatio: false, 
     responsive: true,
     scales: {
       y: {
@@ -43,7 +44,7 @@ function ChartLayout({ expensesData }) {
   };
 
   return (
-    <div className=" bg-indigo-50 w-full p-5 rounded-xl ">
+    <div className=" bg-indigo-50 p-5 h-96 rounded-xl ">
       <Line data={chartData} options={chartOptions} />
     </div>
   );
