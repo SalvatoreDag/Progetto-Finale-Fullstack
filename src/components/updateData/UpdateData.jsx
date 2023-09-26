@@ -41,12 +41,13 @@ function UpdateData({ currentData, setShowUpdateData, updateSearchResults }) {
   };
 
   return (
-    <div className="lg:fixed lg:inset-0 bg-black bg-opacity-10 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center">
       <div className="bg-white p-10 w-full max-w-sm mx-auto rounded-xl">
         <button
           onClick={() => {
             setShowUpdateData(false);
           }}
+         
         >
           <AiOutlineClose />
         </button>

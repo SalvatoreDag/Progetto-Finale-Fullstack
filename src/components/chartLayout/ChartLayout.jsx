@@ -1,13 +1,12 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
-import Chart from "chart.js/auto"; 
+import Chart from "chart.js/auto";
 
 //component showing graph
 function ChartLayout({ expensesData }) {
-  
   const expenseDate = expensesData.map((expense) => expense.date);
   const expenseAmounts = expensesData.map((expense) => expense.amount);
-  const expenseTitles = expensesData.map((expense) => expense.title)
+  const expenseTitles = expensesData.map((expense) => expense.title);
 
   const chartData = {
     labels: expenseDate,
@@ -23,7 +22,7 @@ function ChartLayout({ expensesData }) {
   };
 
   const chartOptions = {
-   maintainAspectRatio: false, 
+    maintainAspectRatio: false,
     responsive: true,
     scales: {
       y: {
@@ -44,7 +43,7 @@ function ChartLayout({ expensesData }) {
   };
 
   return (
-    <div className=" bg-indigo-50 p-5 h-96 rounded-xl ">
+    <div className="bg-indigo-50 rounded-xl p-5 md:mx-auto md:w-11/12 lg:h-4/6 lg:mx-0">
       <Line data={chartData} options={chartOptions} />
     </div>
   );

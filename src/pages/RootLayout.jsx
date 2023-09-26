@@ -7,12 +7,12 @@ function RootLayout() {
     <>
       {/* <Header />
       <Outlet /> */}
-      <div className="lg:flex lg:h-screen">
-        <div className="lg:w-64  text-white">
+      <div >
+        <div >
           {/* Sidebar content */}
           <Header />
         </div>
-        <div className="lg:flex-1 justify-center items-center">
+        <div >
             {/* Main content */}
             <Outlet />
         </div>

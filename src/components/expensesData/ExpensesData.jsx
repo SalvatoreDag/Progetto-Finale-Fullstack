@@ -91,8 +91,8 @@ function ExpensesData() {
   const total = data && data.data && data.data.total ? data.data.total : [];
 
   return (
-    <div className="p-5 h-screen">
-      <div className="mx-auto">
+    <div>
+      <div className="relative">
         <MonthSelect
           monthNames={monthNames}
           selectedMonth={selectedMonth}
@@ -105,8 +105,8 @@ function ExpensesData() {
           {isLoading ? (
             <Loading />
           ) : (
-            <div className=" lg:grid lg:grid-cols-3 lg:gap-3 lg:justify-center">
-              <div className=" col-span-1 h-max">
+            <div className="lg:grid lg:grid-cols-3 gap-10">
+              <div className="lg:col-span-1">
                 <ExpensesLayout
                   expensesData={expensesData}
                   total={total}
@@ -116,7 +116,7 @@ function ExpensesData() {
                   updateSearchResults={updateSearchResults}
                 />
               </div>
-              <div className=" order-first col-span-2">
+              <div className="lg:col-span-2">
                 <ChartLayout expensesData={expensesData} />
 
                 {isOpen ? (
@@ -125,7 +125,7 @@ function ExpensesData() {
                     setIsOpen={setIsOpen}
                   />
                 ) : (
-                  <div className="mt-3 flex gap-5">
+                  <div className="px-2 mt-3 flex gap-3 lg:w-11/12 lg:px-0">
                     <button
                       className="bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-indigo-700 w-full"
                       onClick={() => {
@@ -148,10 +148,8 @@ function ExpensesData() {
       ) : isLoading ? (
         <Loading />
       ) : (
-        <div className="w-96 md:w-screen ">
-          <h3 className="text-center my-5 lg:text-lg font-semibold underline">
-            No expenses found, start saving
-          </h3>
+        <div>
+          <h3 className="text-center mt-5 lg:text-lg font-semibold">No expenses found, start saving</h3>
           <StoreExpenses setIsOpen={setIsOpen} />
         </div>
       )}
