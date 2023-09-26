@@ -61,14 +61,13 @@ function Signup() {
 
   return (
     <>
-      <div className="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0 -mt-12 lg:-mt-20">
+      <div className="flex flex-col items-center min-h-screen pt-6 justify-center sm:pt-0 -mt-12 lg:-mt-20">
         <div>
           <NavLink to="/">
-            <h3 className="text-4xl font-bold text-indigo-800">MONEY NINJA</h3>
+            <h3 className="text-4xl font-bold text-indigo-800">SpendWise</h3>
           </NavLink>
         </div>
         <div className="w-full px-10 py-8 mt-6 overflow-hidden shadow-md sm:max-w-md rounded-xl">
-          {/* <div className="w-full max-w-sm mx-auto bg-white rounded-xl shadow-md p-6"> */}
           <form onSubmit={handleSubmit} method="POST">
             <div className="mt-4">
               <label
@@ -163,7 +162,7 @@ function Signup() {
               </NavLink>
               <button
                 type="submit"
-                className="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase bg-indigo-500 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
+                className="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest  text-white uppercase bg-indigo-500 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
               >
                 Register
               </button>
@@ -171,7 +170,6 @@ function Signup() {
           </form>
         </div>
       </div>
-      {/* </div> */}
     </>
   );
 }

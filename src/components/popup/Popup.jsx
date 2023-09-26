@@ -6,7 +6,6 @@ const Popup = ({ message }) => {
   const queryClient = useQueryClient();
   const timerRef = useRef(null);
 
-
   useEffect(() => {
     if (message) {
       setIsActive(true);

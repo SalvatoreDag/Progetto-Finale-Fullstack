@@ -1,7 +1,7 @@
 import React from "react";
-import { useRef, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import logo from "../../img/logo.svg";
+import logo2 from "../../img/budget.png";
 import { useQuery } from "@tanstack/react-query";
 import { ClientQuery } from "../../query/ClientQuery";
 import { AiOutlineHome } from "react-icons/ai";
@@ -18,8 +18,6 @@ function Header() {
 
   const accessToken =
     sessionStorage.getItem("accessToken") || localStorage.getItem("token");
-
-  const navRef = useRef();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -40,13 +38,13 @@ function Header() {
   };
 
   return (
-    <>
+    <div>
       <button
         data-drawer-target="default-sidebar"
         data-drawer-toggle="default-sidebar"
         aria-controls="default-sidebar"
         type="button"
-        className="inline-flex items-center p-2 mt-2 ml-3 text-sm"
+        className="fixed top-0 left-0 inline-flex z-40 text-black items-center p-2 mt-2 ml-3 text-sm lg:text-xl"
         onClick={toggleSidebar}
       >
         <span className="sr-only">Open sidebar</span>
@@ -55,27 +53,27 @@ function Header() {
 
       <aside
         id="default-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
+        className={`fixed top-0 left-0 z-10 w-64 h-screen transition-transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        }`}
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 ">
           <ul className="space-y-2 font-medium text-indigo-900">
             <li>
-              <a
+              <NavLink
                 href="#"
-                className="flex flex-col items-center p-2 rounded-lg "
+                className="flex flex-col items-center gap-2 p-2 rounded-lg "
                 onClick={closeSidebar}
               >
                 <img
-                  className="w-14 h-14 transition duration-75 md:w-20 md:h-20"
-                  src={logo}
+                  className="w-14 h-14 mt-10 transition duration-75 "
+                  src={logo2}
                 />
-                <span className="flex-1 ml-3 whitespace-nowrap">
-                  MONEY NINJA
+                <span className="flex-1 ml-3 uppercase font-bold text-xl whitespace-nowrap">
+                  SpendWise
                 </span>
-              </a>
+              </NavLink>
             </li>
             {isLoggedIn && (
               <li>
@@ -85,7 +83,7 @@ function Header() {
                   onClick={closeSidebar}
                 >
                   <span className="flex-1 ml-3 whitespace-nowrap">
-                    Welcome Back, {userName}
+                    {userName}
                   </span>
                 </a>
               </li>
@@ -155,7 +153,7 @@ function Header() {
           </ul>
         </div>
       </aside>
-    </>
+    </div>
   );
 }
 
