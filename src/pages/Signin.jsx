@@ -53,7 +53,7 @@ function Signin() {
 
   return (
     <>
-      <div className="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0 -mt-12 lg:-mt-20">
+      <div className="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0 lg:-mt-20">
         <div>
           <NavLink to="/">
             <h3 className="text-4xl text-center font-bold text-indigo-800">
