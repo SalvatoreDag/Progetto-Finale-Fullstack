@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ExpensesLayout from "../expensesLayout/ExpensesLayout";
 import ChartLayout from "../chartLayout/ChartLayout";
 import Loading from "../loading/Loading";
@@ -54,7 +54,7 @@ function ExpensesData() {
     }
   );
 
-  //change month function 
+  //change month function
   const handleMonthChange = (selectedValue) => {
     setSelectedMonth(parseInt(selectedValue, 10));
     setSearchResults([]);
@@ -88,56 +88,69 @@ function ExpensesData() {
   const expensesData =
     data && data.data && data.data.expenses ? data.data.expenses : [];
 
+  const total = data && data.data && data.data.total ? data.data.total : [];
+
   return (
-    <div className="w-max">
-      <MonthSelect
-        monthNames={monthNames}
-        selectedMonth={selectedMonth}
-        handleMonthChange={handleMonthChange}
-      />
+    <div>
+      <div className="relative">
+        <MonthSelect
+          monthNames={monthNames}
+          selectedMonth={selectedMonth}
+          handleMonthChange={handleMonthChange}
+          expensesData={expensesData}
+        />
+      </div>
       {expensesData.length > 0 ? (
         <div>
           {isLoading ? (
             <Loading />
           ) : (
-            <div className="lg:flex">
-            <div className="lg:w-1/3">
-              <ExpensesLayout
-                expensesData={expensesData}
-                searchResults={searchResults}
-                onSearch={handleSearch}
-                onDelete={deleteExpenses}
-                updateSearchResults={updateSearchResults}
-              />
+            <div className="lg:grid lg:grid-cols-3 gap-10">
+              <div className="lg:col-span-1">
+                <ExpensesLayout
+                  expensesData={expensesData}
+                  total={total}
+                  searchResults={searchResults}
+                  onSearch={handleSearch}
+                  onDelete={deleteExpenses}
+                  updateSearchResults={updateSearchResults}
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <ChartLayout expensesData={expensesData} />
+
+                {isOpen ? (
+                  <StoreExpenses
+                    expensesData={expensesData}
+                    setIsOpen={setIsOpen}
+                  />
+                ) : (
+                  <div className="px-2 mt-3 flex gap-3 lg:w-11/12 lg:px-0">
+                    <button
+                      className="bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-indigo-700 w-full"
+                      onClick={() => {
+                        setIsOpen(true);
+                      }}
+                    >
+                      Add new Expense +
+                    </button>
+                    {expensesData.length > 0 && (
+                      <div className="text-center w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded">
+                        Total {total} €
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="lg:w-2/3">
-              <ChartLayout expensesData={expensesData} />
-          
-              {isOpen ? (
-                <StoreExpenses expensesData={expensesData} setIsOpen={setIsOpen} />
-              ) : (
-                <button
-                  className="w-full bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-indigo-700"
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
-                >
-                  Add new Expense +
-                </button>
-              )}
-            </div>
-          </div>
-          
           )}
         </div>
       ) : isLoading ? (
         <Loading />
       ) : (
         <div>
-          <h3 className="text-center my-5 lg:text-lg font-semibold underline">
-            No expenses found, enter some
-          </h3>
-          <StoreExpenses />
+          <h3 className="text-center mt-5 lg:text-lg font-semibold">No expenses found, start saving</h3>
+          <StoreExpenses setIsOpen={setIsOpen} />
         </div>
       )}
     </div>

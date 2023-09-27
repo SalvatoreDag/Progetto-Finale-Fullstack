@@ -20,7 +20,7 @@ function SearchForm({ onSearch, searchResults }) {
   
     return (
       <form onSubmit={handleSearchSubmit}>
-        <div className="relative">
+        <div className="relative mx-auto w-1/2 md:w-1/3 lg:w-4/6">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <svg
               aria-hidden="true"
@@ -31,22 +31,22 @@ function SearchForm({ onSearch, searchResults }) {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
+            </svg> 
           </div>
           <input
             type="search"
             id="default-search"
-            className="block w-full p-3 pl-10 text-sm bg-gray-200 text-gray-900 border rounded-3xl "
+            className="block w-full p-3 pl-10 text-sm bg-gray-200 text-gray-900 border rounded-3xl"
             placeholder="Search Expenses..."
             required
             ref={searchRef}
             onChange={handleSearchChange}
           />
-          {searchResults.length > 0 &&
+          {/* {searchResults.length > 0 &&
             <button
             type="button"
             onClick={handleReset}
-            className="absolute inset-y-0 right-0 flex items-center pr-3"
+            
           >
             <svg
               aria-hidden="true"
@@ -63,7 +63,7 @@ function SearchForm({ onSearch, searchResults }) {
                 d="M6 18L18 6M6 6l12 12"
               ></path>
             </svg>
-          </button>}
+          </button>} */}
         </div>
       </form>
     );

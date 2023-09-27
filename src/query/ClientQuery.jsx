@@ -61,6 +61,7 @@ export const ClientQuery = () => {
 
   const logoutMutation = useMutation(logout, {
     onSuccess: (response) => {
+      
       queryClient.setQueryData(["message"], response.data.message);
       // queryClient.setQueryData(["isLoggedIn"], false);
       queryClient.clear()
@@ -75,6 +76,8 @@ export const ClientQuery = () => {
   const logoutUser = async (accessToken) => {
     try {
       const response = await logoutMutation.mutateAsync(accessToken);
+      console.log(response)
+
     } catch (error) {
       console.error("errore durante il logout");
     }

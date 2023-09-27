@@ -57,7 +57,7 @@ function Signin() {
         <div>
           <NavLink to="/">
             <h3 className="text-4xl text-center font-bold text-indigo-800">
-              LOGO
+              SpendWise
             </h3>
           </NavLink>
           <NavLink
@@ -102,7 +102,7 @@ function Signin() {
                   ref={passwordRef}
                 />
                 <button
-                  className="absolute right-0 top-1/2 -translate-y-1/2 h-8 w-8 text-gray-600 "
+                  className="absolute right-0 top-1/2  -translate-y-1/2 h-8 w-8 text-gray-600 "
                   onClick={handleToggle}
                 >
                   {showPassword ? (

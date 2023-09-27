@@ -9,8 +9,8 @@ import tech from "../../img/techcrunch.png";
 
 function About() {
   return (
-    <section className="lg:ml-72 py-5">
-      <div className="mb-10 lg:mb-20">
+    <section className="py-5">
+      {/* <div className="mb-10 lg:mb-20">
         <h3 className="mt-5 text-center font-semibold md:text-xl">
           As fetured in
         </h3>
@@ -32,7 +32,7 @@ function About() {
             className="grayscale w-24 h-6 md:w-36 md:h-10 lg:w-48 lg:h-14"
           />
         </div>
-      </div>
+      </div> */}
       <h2 className="text-center font-extrabold md:text-2xl lg:text-4xl lg:mb-20">
         Why Tracking Your Finances Matters
       </h2>
