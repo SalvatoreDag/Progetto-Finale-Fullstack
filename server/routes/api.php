@@ -20,9 +20,6 @@ use App\Http\Controllers\ExpensesController;
 //rotte pubbliche
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
-// Route::get('/csrf-token', function () {
-//     return response()->json(['csrf_token' => csrf_token()]);
-// });
 
 
 
@@ -40,14 +37,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/expenses/{id}', [ExpensesController::class, 'show']);
     Route::get('/user', [UserController::class, 'getUserByToken']);
-
-    // //api per i guadagni 
-    // Route::get('/incomes/total', [IncomesController::class, 'total']);
-    // Route::post('/incomes', [IncomesController::class, 'store']);
-    // Route::delete('/incomes/{id}', [IncomesController::class, 'destroy']);
-    // Route::put('/incomes/{id}', [IncomesController::class, 'update']);
-    // Route::get('/incomes', [IncomesController::class, 'index']);
-    // Route::get('/incomes/{id}', [IncomesController::class, 'show']);
 });
 
 
